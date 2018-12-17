@@ -22,10 +22,10 @@ import javax.persistence.EntityManager;
  */
 public class UserDaoImpl implements UserDao<User> {
 
-    private EntityManager entityManager;
+    private ArrayList<User> user = new ArrayList<>();
 
     @Override
-    public void insert(User t) {
+    public void insert(User user) {
         try {
             PreparedStatement pst;
             Connection connection;
@@ -34,8 +34,8 @@ public class UserDaoImpl implements UserDao<User> {
             String query = "insert into User (Username,Password,session) values (?,?,'user')";
             PreparedStatement preparedStmt = connection.prepareStatement(query);
 
-            preparedStmt.setString(1, t.getName());
-            preparedStmt.setString(2, t.getPassword());
+            preparedStmt.setString(1, user.getName());
+            preparedStmt.setString(2, user.getPassword());
 
             preparedStmt.executeUpdate();
             preparedStmt.close();
@@ -47,12 +47,12 @@ public class UserDaoImpl implements UserDao<User> {
     }
 
     @Override
-    public void update(User t, int id) {
+    public void update(User user, int idUser) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(int idUser) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -82,7 +82,7 @@ public class UserDaoImpl implements UserDao<User> {
 
     @Override
     public ArrayList<User> getAll() {
-        ArrayList<User> user = new ArrayList<>();
+        
         try {
             PreparedStatement pst;
             Connection connection;
