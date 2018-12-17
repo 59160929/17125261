@@ -13,13 +13,13 @@ import java.util.ArrayList;
  */
 public class CommentService {
 
-    private static CommentDao commentDAO;
-    private static UserDao userADo;
+    private static CommentDao commentDao;
+    private static UserDao userDao;
 
     public static ArrayList<Comment> getComment() {
-        commentDAO = new CommentDaoImpl();
+        commentDao = new CommentDaoImpl();
 
-        return commentDAO.getAll();
+        return commentDao.getAll();
     }
 
 //    public static String getUserById(int idUser) throws SQLException {
@@ -31,8 +31,8 @@ public class CommentService {
 //
 //    }
     public static String getUserName(int idUser) {
-        userADo = new UserDaoImpl();
-        ArrayList<User> listUser = userADo.getAll();
+        userDao = new UserDaoImpl();
+        ArrayList<User> listUser = userDao.getAll();
 
         for (int i = 0; i < listUser.size(); i++) {
             if (listUser.get(i).getIdUser() == idUser) {
@@ -43,18 +43,18 @@ public class CommentService {
     }
 
     public void addComment(Comment comment) {
-        commentDAO = new CommentDaoImpl();
-        commentDAO.insert(comment);
+        commentDao = new CommentDaoImpl();
+        commentDao.insert(comment);
     }
 
     public void updateComment(Comment comment, int idcomment) {
-        commentDAO = new CommentDaoImpl();
-        commentDAO.update(comment, idcomment);
+        commentDao = new CommentDaoImpl();
+        commentDao.update(comment, idcomment);
     }
 
     public void deleteComment(int idcomment) {
-        commentDAO = new CommentDaoImpl();
-        commentDAO.delete(idcomment);
+        commentDao = new CommentDaoImpl();
+        commentDao.delete(idcomment);
 
     }
 
