@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -18,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -31,27 +33,56 @@ public class Review extends javax.swing.JFrame {
      * Creates new form Review
      */
     private int IDRestaurant;
-    private int user=0;
-     String userid =null;
-    public Review(int user,int x) {
-        
-        if(user == 1 ){
-             userid = "golf";
-        }
-        else 
+    private int user = 0;
+    private String userid = null;
+
+    private DefaultTableModel model;
+    private CommentService service = new CommentService();
+    private Object row[];
+    private int idCommentSelectRow;
+    private int selectRowIndex;
+    private String userSelectRow;
+
+    public Review(int user, int x) {
+
+        if (user == 1) {
+            userid = "golf";
+        } else {
             userid = "michel";
-        
+        }
+
         IDRestaurant = x;
 
         initComponents();
+        showComment();
     }
 
     public Review() {
 
         initComponents();
+        showComment();
+
     }
 
-  
+    public void showComment() {
+        ArrayList<Comment> list = service.getComment();
+        model = (DefaultTableModel) tableComment.getModel();
+        row = new Object[3];
+
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getIdrestaurant() == 2) {
+                //row[0] = x++;
+                row[0] = list.get(i).getIdcomment();
+                row[1] = service.getUserName(list.get(i).getIduser());
+                row[2] = list.get(i).getComment();
+
+                model.addRow(row);
+
+            }
+
+        }
+
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -85,11 +116,12 @@ public class Review extends javax.swing.JFrame {
         Namelbl = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel20 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jLabel22 = new javax.swing.JLabel();
+        TextFieldComment = new javax.swing.JTextField();
+        ButtonComment = new javax.swing.JButton();
+        buttonDelete = new javax.swing.JButton();
+        buttonEdit = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tableComment = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
         jLabel21 = new javax.swing.JLabel();
         btnNearby1 = new javax.swing.JButton();
@@ -288,7 +320,7 @@ public class Review extends javax.swing.JFrame {
         jLabel14.setForeground(new java.awt.Color(0, 0, 153));
         jLabel14.setText("Address");
         jPanel3.add(jLabel14);
-        jLabel14.setBounds(198, 75, 160, 48);
+        jLabel14.setBounds(198, 75, 160, 47);
 
         jLabel15.setFont(new java.awt.Font("Angsana New", 0, 36)); // NOI18N
         jLabel15.setText("get address restaurant");
@@ -318,7 +350,7 @@ public class Review extends javax.swing.JFrame {
         jLabel18.setForeground(new java.awt.Color(0, 0, 153));
         jLabel18.setText("Address");
         jPanel3.add(jLabel18);
-        jLabel18.setBounds(717, 158, 135, 48);
+        jLabel18.setBounds(717, 158, 141, 47);
 
         jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(-370, 180, -1, 240));
 
@@ -349,35 +381,53 @@ public class Review extends javax.swing.JFrame {
         });
         jPanel1.add(Namelbl, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 680, 50));
 
-        jPanel4.setBackground(new java.awt.Color(251, 229, 229));
+        jPanel4.setBackground(new java.awt.Color(40, 62, 80));
 
-        jLabel20.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 36)); // NOI18N
-        jLabel20.setForeground(new java.awt.Color(0, 0, 153));
+        jLabel20.setFont(new java.awt.Font("Franklin Gothic Demi", 1, 36)); // NOI18N
+        jLabel20.setForeground(new java.awt.Color(255, 255, 255));
         jLabel20.setText("        Comment");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
-
-        jButton1.setText("เเสดงความคิดเห็น");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        ButtonComment.setBackground(new java.awt.Color(102, 204, 255));
+        ButtonComment.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        ButtonComment.setText("Comment");
+        ButtonComment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                ButtonCommentActionPerformed(evt);
             }
         });
 
-        jLabel22.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 36)); // NOI18N
-        jLabel22.setForeground(new java.awt.Color(0, 0, 153));
-        jLabel22.setText("Lasted Comment");
+        buttonDelete.setBackground(new java.awt.Color(255, 51, 51));
+        buttonDelete.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        buttonDelete.setText("Delete");
+        buttonDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonDeleteActionPerformed(evt);
+            }
+        });
+
+        buttonEdit.setBackground(new java.awt.Color(255, 153, 51));
+        buttonEdit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        buttonEdit.setText("Edit");
+        buttonEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonEditActionPerformed(evt);
+            }
+        });
+
+        tableComment.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Username", "Comment"
+            }
+        ));
+        tableComment.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableCommentMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tableComment);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -386,40 +436,44 @@ public class Review extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jTextField1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(117, 117, 117)
+                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(137, 137, 137)
-                                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(buttonDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(buttonEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 334, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 187, Short.MAX_VALUE)))
+                                .addComponent(TextFieldComment, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(ButtonComment, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
                 .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(buttonEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(buttonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ButtonComment, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TextFieldComment, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18))
         );
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, 670, 350));
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, 660, 350));
 
         jPanel5.setBackground(new java.awt.Color(251, 229, 229));
 
@@ -522,20 +576,17 @@ public class Review extends javax.swing.JFrame {
     //private int idRestaurant = Index.x ;
     private int count = 1;
     private int point = 0;
-  
 
-    
-    
     public void showAvarage() {
-        
-        double average = reviewPostService.getAverage(IDRestaurant);
-        
-        String getaverage= average+"";
 
-        getaverage = String.format("%.2f", average+0.00);
+        double average = reviewPostService.getAverage(IDRestaurant);
+
+        String getaverage = average + "";
+
+        getaverage = String.format("%.2f", average + 0.00);
 
         jLabel12.setText(getaverage);
-        
+
     }
 
     public void showNameRestaurant() {
@@ -556,21 +607,17 @@ public class Review extends javax.swing.JFrame {
     public void point(int x) throws SQLException {
         point = x;
 
-        
-        
         if (reviewPostService.updatePointAndCount(IDRestaurant, 1, point) == true) {
-            
-            
-            if(reviewPostService.updateRating(IDRestaurant) == true){
 
-               if(reviewPostService.addStatus(IDRestaurant,user) == true){ 
-            JOptionPane.showMessageDialog(this, "ให้คะเเนนเรียบร้อยเเล้ว");
+            if (reviewPostService.updateRating(IDRestaurant) == true) {
 
-               }
-               else if(reviewPostService.addStatus(IDRestaurant,user) == false){ 
-                JOptionPane.showMessageDialog(this, "คุณให้คะเเนนเเล้ว");
+                if (reviewPostService.addStatus(IDRestaurant, user) == true) {
+                    JOptionPane.showMessageDialog(this, "ให้คะเเนนเรียบร้อยเเล้ว");
 
-               }
+                } else if (reviewPostService.addStatus(IDRestaurant, user) == false) {
+                    JOptionPane.showMessageDialog(this, "คุณให้คะเเนนเเล้ว");
+
+                }
 
             }
         }
@@ -603,7 +650,7 @@ public class Review extends javax.swing.JFrame {
         try {
             // 1 point
             point(1);
-                    showAvarage();
+            showAvarage();
 
         } catch (SQLException ex) {
             Logger.getLogger(Review.class.getName()).log(Level.SEVERE, null, ex);
@@ -617,7 +664,7 @@ public class Review extends javax.swing.JFrame {
         try {
             // 2 point
             point(2);
-                    showAvarage();
+            showAvarage();
 
         } catch (SQLException ex) {
             Logger.getLogger(Review.class.getName()).log(Level.SEVERE, null, ex);
@@ -631,7 +678,7 @@ public class Review extends javax.swing.JFrame {
         try {
             // 3 point
             point(3);
-                  showAvarage();
+            showAvarage();
 
         } catch (SQLException ex) {
             Logger.getLogger(Review.class.getName()).log(Level.SEVERE, null, ex);
@@ -645,7 +692,7 @@ public class Review extends javax.swing.JFrame {
         try {
             // 4 point
             point(4);
-                 showAvarage();
+            showAvarage();
 
         } catch (SQLException ex) {
             Logger.getLogger(Review.class.getName()).log(Level.SEVERE, null, ex);
@@ -659,7 +706,7 @@ public class Review extends javax.swing.JFrame {
         try {
             // 5 point
             point(5);
-              showAvarage();
+            showAvarage();
 
         } catch (SQLException ex) {
             Logger.getLogger(Review.class.getName()).log(Level.SEVERE, null, ex);
@@ -676,9 +723,28 @@ public class Review extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jLabel16AncestorAdded
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void ButtonCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonCommentActionPerformed
+        Comment com = new Comment();
+        String TextField = TextFieldComment.getText();
+        if (service.checkFieldCommentNull(TextField)) {
+            JOptionPane.showMessageDialog(this, "กรุณากรอกข้อความ");
+        } else {
+            com.setComment(TextField);
+            com.setIduser(user);
+            com.setIdrestaurant(IDRestaurant);
+            service.addComment(com);
+
+            while (model.getRowCount() > 0) {
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    model.removeRow(i);
+                }
+            }
+            //tableComment.setValueAt(TextField, selectRowIndex, 0);
+            showComment();
+            TextFieldComment.setText(" ");
+        }
+
+    }//GEN-LAST:event_ButtonCommentActionPerformed
 
     private void jLabel2AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jLabel2AncestorAdded
 
@@ -709,7 +775,7 @@ public class Review extends javax.swing.JFrame {
     }//GEN-LAST:event_Reviewlbl1AncestorAdded
 
     private void userlblAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_userlblAncestorAdded
-                userlbl.setText(userid);
+        userlbl.setText(userid);
 
 
     }//GEN-LAST:event_userlblAncestorAdded
@@ -717,12 +783,60 @@ public class Review extends javax.swing.JFrame {
     private void point6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_point6ActionPerformed
 
         setVisible(false);
-        
+
         allRastaurant change = new allRastaurant();
         change.setVisible(true);
 
 
     }//GEN-LAST:event_point6ActionPerformed
+
+    private void buttonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditActionPerformed
+        Comment comment = new Comment();
+
+        if (service.checkIdUserMatchWithRow(userSelectRow, user)) {
+            try {
+                String newCommet = JOptionPane.showInputDialog(null, "กรอกข้อความที่ต้องการเเก้ไข");
+                if (service.checkFieldCommentNull(newCommet)) {
+                    JOptionPane.showMessageDialog(this, "กรุณากรอกข้อความ");
+                } else {
+                    model.setValueAt(newCommet, selectRowIndex, 2);
+                    comment.setComment(newCommet);
+                    service.updateComment(comment, idCommentSelectRow);
+                }
+            } catch (Exception ex) {
+
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "ต้องเป็นคอมเม้นต์ของคุณจึงจะสามารถเเก้ไขได้");
+        }
+    }//GEN-LAST:event_buttonEditActionPerformed
+
+    private void buttonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteActionPerformed
+        Comment comment = new Comment();
+
+        if (service.checkIdUserMatchWithRow(userSelectRow, user)) {
+            int YesorNo = JOptionPane.showConfirmDialog(null, "คุณต้องการลบความคิดเห็น", "ลบความคิดเห็น", JOptionPane.YES_NO_OPTION);
+            if (YesorNo == 0) {
+                service.deleteComment(idCommentSelectRow);
+                String null1 = "";
+                tableComment.setValueAt(null1, selectRowIndex, 0);
+                tableComment.setValueAt(null1, selectRowIndex, 1);
+                tableComment.setValueAt(null1, selectRowIndex, 2);
+            } else {
+
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "ต้องเป็นคอมเม้นต์ของคุณจึงจะสามารถลบได้");
+        }
+    }//GEN-LAST:event_buttonDeleteActionPerformed
+
+    private void tableCommentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableCommentMouseClicked
+        selectRowIndex = tableComment.getSelectedRow();
+        tableComment.getModel();
+        idCommentSelectRow = Integer.parseInt(tableComment.getValueAt(selectRowIndex, 0).toString());
+        userSelectRow = tableComment.getValueAt(selectRowIndex, 1).toString();
+    }//GEN-LAST:event_tableCommentMouseClicked
 
     /**
      * @param args the command line arguments
@@ -761,12 +875,15 @@ public class Review extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Addresslbl1;
+    private javax.swing.JButton ButtonComment;
     private javax.swing.JLabel NameRestaurant;
     private javax.swing.JLabel Namelbl;
     private javax.swing.JLabel Reviewlbl1;
+    private javax.swing.JTextField TextFieldComment;
     private javax.swing.JButton btnNearby1;
     private javax.swing.JButton btnNearby2;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton buttonDelete;
+    private javax.swing.JButton buttonEdit;
     private javax.swing.JButton jButton13;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -779,7 +896,6 @@ public class Review extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -787,15 +903,14 @@ public class Review extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JProgressBar jProgressBar1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton point1;
     private javax.swing.JButton point2;
     private javax.swing.JButton point3;
     private javax.swing.JButton point4;
     private javax.swing.JButton point5;
     private javax.swing.JButton point6;
+    private javax.swing.JTable tableComment;
     private javax.swing.JLabel userlbl;
     // End of variables declaration//GEN-END:variables
 }

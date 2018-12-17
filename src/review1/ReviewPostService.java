@@ -267,10 +267,10 @@ public class ReviewPostService {
         return false;
     }
 
-    public static void main(String[] args) {
-        ArrayList<Restaurant> restaurant = getLinkImage();
-        System.out.println(getStatus( 5,4))  ;    
-
-    }
+//    public static void main(String[] args) {
+//        ArrayList<Restaurant> restaurant = getLinkImage();
+//        System.out.println(getStatus( 5,4))  ;    
+//
+//    }
 
 }
