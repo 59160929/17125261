@@ -37,7 +37,7 @@ public class Review extends javax.swing.JFrame {
     private String userid = null;
 
     private DefaultTableModel model;
-    private CommentService service = new CommentService();
+    private CommentService commentService = new CommentService();
     private Object row[];
     private int idCommentSelectRow;
     private int selectRowIndex;
@@ -65,7 +65,7 @@ public class Review extends javax.swing.JFrame {
     }
 
     public void showComment() {
-        ArrayList<Comment> list = service.getComment();
+        ArrayList<Comment> list = commentService.getComment();
         model = (DefaultTableModel) tableComment.getModel();
         row = new Object[3];
 
@@ -73,7 +73,7 @@ public class Review extends javax.swing.JFrame {
             if (list.get(i).getIdrestaurant() == 2) {
                 //row[0] = x++;
                 row[0] = list.get(i).getIdcomment();
-                row[1] = service.getUserName(list.get(i).getIduser());
+                row[1] = commentService.getUserName(list.get(i).getIduser());
                 row[2] = list.get(i).getComment();
 
                 model.addRow(row);
@@ -726,13 +726,13 @@ public class Review extends javax.swing.JFrame {
     private void ButtonCommentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonCommentActionPerformed
         Comment com = new Comment();
         String TextField = TextFieldComment.getText();
-        if (service.checkFieldCommentNull(TextField)) {
+        if (commentService.checkFieldCommentNull(TextField)) {
             JOptionPane.showMessageDialog(this, "กรุณากรอกข้อความ");
         } else {
             com.setComment(TextField);
             com.setIduser(user);
             com.setIdrestaurant(IDRestaurant);
-            service.addComment(com);
+            commentService.addComment(com);
 
             while (model.getRowCount() > 0) {
                 for (int i = 0; i < model.getRowCount(); i++) {
@@ -793,15 +793,15 @@ public class Review extends javax.swing.JFrame {
     private void buttonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditActionPerformed
         Comment comment = new Comment();
 
-        if (service.checkIdUserMatchWithRow(userSelectRow, user)) {
+        if (commentService.checkIdUserMatchWithRow(userSelectRow, user)) {
             try {
                 String newCommet = JOptionPane.showInputDialog(null, "กรอกข้อความที่ต้องการเเก้ไข");
-                if (service.checkFieldCommentNull(newCommet)) {
+                if (commentService.checkFieldCommentNull(newCommet)) {
                     JOptionPane.showMessageDialog(this, "กรุณากรอกข้อความ");
                 } else {
                     model.setValueAt(newCommet, selectRowIndex, 2);
                     comment.setComment(newCommet);
-                    service.updateComment(comment, idCommentSelectRow);
+                    commentService.updateComment(comment, idCommentSelectRow);
                 }
             } catch (Exception ex) {
 
@@ -815,10 +815,10 @@ public class Review extends javax.swing.JFrame {
     private void buttonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteActionPerformed
         Comment comment = new Comment();
 
-        if (service.checkIdUserMatchWithRow(userSelectRow, user)) {
+        if (commentService.checkIdUserMatchWithRow(userSelectRow, user)) {
             int YesorNo = JOptionPane.showConfirmDialog(null, "คุณต้องการลบความคิดเห็น", "ลบความคิดเห็น", JOptionPane.YES_NO_OPTION);
             if (YesorNo == 0) {
-                service.deleteComment(idCommentSelectRow);
+                commentService.deleteComment(idCommentSelectRow);
                 String null1 = "";
                 tableComment.setValueAt(null1, selectRowIndex, 0);
                 tableComment.setValueAt(null1, selectRowIndex, 1);
