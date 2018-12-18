@@ -20,7 +20,7 @@ public class RegisterService {
         userADo.insert(user);
     }
 
-    public static boolean checkUsernameExist(String username) {
+    public boolean checkUsernameExist(String username) {
         boolean usernameExists = false;
         userADo = new UserDaoImpl();
         ArrayList<User> listUser = getUser();
@@ -54,6 +54,19 @@ public class RegisterService {
     public static ArrayList<User> getUser() {
         userADo = new UserDaoImpl();
         return userADo.getAll();
+    }
+
+    public boolean checkPasswordExist(String password) {
+        boolean passwordExists = false;
+        userADo = new UserDaoImpl();
+        ArrayList<User> listUser = getUser();
+        for (int i = 0; i < listUser.size(); i++) {
+            if (password.equals(listUser.get(i).getPassword())) {
+                passwordExists = true;
+            }
+        }
+        return passwordExists;
+
     }
 
 }

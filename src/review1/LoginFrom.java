@@ -159,7 +159,7 @@ public class LoginFrom extends javax.swing.JFrame {
 
     private void buttonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoginActionPerformed
         User user = new User();
-        allRastaurant login = new allRastaurant();
+        allRastaurant restaurant = new allRastaurant();
 
         if (service.checkFieldNull(txtUsername.getText())) {
             JOptionPane.showMessageDialog(this, "กรุณากรอก Username");
@@ -170,10 +170,10 @@ public class LoginFrom extends javax.swing.JFrame {
         } else if (!service.checkPasswordExist(txtPassword.getText())) {
             JOptionPane.showMessageDialog(this, "Password ไม่ถูกต้อง");
         } else {
-            login.setVisible(true);
-            login.pack();
-            login.setLocationRelativeTo(null);
-            login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            restaurant.setVisible(true);
+            restaurant.pack();
+            restaurant.setLocationRelativeTo(null);
+            restaurant.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
 
     }//GEN-LAST:event_buttonLoginActionPerformed

@@ -5,6 +5,7 @@
  */
 package review1;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,7 +13,7 @@ import javax.swing.JOptionPane;
  * @author ADMIN
  */
 public class RegisterFrom extends javax.swing.JFrame {
-    
+
     private RegisterService service = new RegisterService();
 
     /**
@@ -106,10 +107,20 @@ public class RegisterFrom extends javax.swing.JFrame {
         buttonLogin.setBackground(new java.awt.Color(255, 102, 0));
         buttonLogin.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         buttonLogin.setText("Login");
+        buttonLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonLoginActionPerformed(evt);
+            }
+        });
 
         buttonCancel.setBackground(new java.awt.Color(255, 0, 0));
         buttonCancel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         buttonCancel.setText("Cancel");
+        buttonCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -203,6 +214,22 @@ public class RegisterFrom extends javax.swing.JFrame {
             txtRePassword.setText(" ");
         }
     }//GEN-LAST:event_buttonRegisterActionPerformed
+
+    private void buttonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonLoginActionPerformed
+        LoginFrom login = new LoginFrom();
+        login.setVisible(true);
+        login.pack();
+        login.setLocationRelativeTo(null);
+        login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }//GEN-LAST:event_buttonLoginActionPerformed
+
+    private void buttonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelActionPerformed
+        LoginFrom login = new LoginFrom();
+        login.setVisible(true);
+        login.pack();
+        login.setLocationRelativeTo(null);
+        login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }//GEN-LAST:event_buttonCancelActionPerformed
 
     /**
      * @param args the command line arguments
